@@ -15,16 +15,16 @@ function Request() {
     if (!KNOWN_EVENTS.includes(event))
       throw new Error(`Unknown event - ${event}`)
 
-    if (typeof callback != 'function')
+    if (typeof callback !== 'function')
       throw new Error(`Expected typeof function, found ${typeof callback}`)
 
     events[event] = callback
   }
 
   function preSend(successFunction) {
-    if (typeof events['success'] != 'function')
+    if (typeof events['success'] !== 'function')
       throw new Error('No function for success event found')
-    else if (typeof events['error'] != 'function')
+    else if (typeof events['error'] !== 'function')
       throw new Error('No function for error event found')
     else successFunction()
   }

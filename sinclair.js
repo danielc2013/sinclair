@@ -15,7 +15,7 @@ module.exports = (serviceNode, factorySource) => {
       let req = req_factory.request()
 
       req.on('send', () => {
-        let p = svcPromise(service[exp], args)
+        let p = Promise.resolve(service[exp](args))
 
         p
           .then(data => {
@@ -31,14 +31,4 @@ module.exports = (serviceNode, factorySource) => {
   }
 
   return exportVals
-}
-
-function svcPromise(func, args) {
-  return new Promise((resolve, reject) => {
-    try {
-      func(args, resolve)
-    } catch (e) {
-      reject(e)
-    }
-  })
 }
