@@ -15,15 +15,25 @@ module.exports = (serviceNode, factorySource) => {
       let req = req_factory.request()
 
       req.on('send', () => {
-        let p = Promise.resolve(service[exp](args))
+        if (svc.async === false) {
+          try {
+            service[exp](args, data => {
+              req.emit('success', data)
+            })
+          } catch (e) {
+            req.emit('error', e)
+          }
+        } else if (svc.async === true) {
+          let p = Promise.resolve(service[exp](args))
 
-        p
-          .then(data => {
-            req.emit('success', data)
-          })
-          .catch(err => {
-            req.emit('error', err)
-          })
+          p
+            .then(data => {
+              req.emit('success', data)
+            })
+            .catch(err => {
+              req.emit('error', err)
+            })
+        }
       })
 
       return req
